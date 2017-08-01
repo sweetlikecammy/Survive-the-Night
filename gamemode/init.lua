@@ -1,4 +1,6 @@
 include( 'shared.lua' )
+include("sv_atmos.lua");
+--include('sv_methods.lua')
 
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("cl_init.lua")
@@ -23,17 +25,7 @@ GM.PlayerSpawnTime = {}
    Desc: Called immediately after starting the gamemode
 -----------------------------------------------------------]]
 function GM:Initialize()
-	StartGameChecker()
-end
-
-function StartGameChecker()
-	timer.Create("StartGameTimer", 5, 1, function()
-		if(#player.GetAll() > 4)then
-			SVR:StartGame()
-		else
-			StartGameChecker()
-		end
-	end)
+	
 end
 
 --[[---------------------------------------------------------
@@ -98,7 +90,7 @@ function GM:DoPlayerDeath( plyr, attacker, dmginfo )
 		
 		plyr:SetRenderMode(RENDERMODE_TRANSALPHA)
 		plyr:SetColor(Color(255,255,255,30))
-		plyr:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+		plyr:SetCollisionGroup(COLLISION_GROUP_WORLD)
 		plyr:SetNWBool("Ghost", true)
 	end
 end
@@ -115,7 +107,8 @@ function GM:EntityTakeDamage( ent, info )
 end
 
 function GM:PlayerCanHearPlayersVoice(plyrListener, plyrTalker)
-	if(player_manager.GetPlayerClass(plyrTalker) == "Governor" && plyrTalker:GetNWBool("revealed"))then -- If the talker is the governor and he is revealed himself then
+	local plyrsRevealed = SVR.playersRevealed
+	if(player_manager.GetPlayerClass(plyrTalker) == "Governor" && table.HasValue(plyrsRevealed, plyrTalker))then -- If the talker is the governor and he is revealed himself then
 		return true
 	end
 	

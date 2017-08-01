@@ -88,15 +88,15 @@ net.Receive("playerVote", function(len,plyr)
 	SV_JUDGE:VotePlayer(victim, plyr)
 end)
 
-function SV_JUDGE:UnvotePlayer(victim, voter)
+function SV_JUDGE:UnvotePlayer(victim)
 	local curVotes = SV_JUDGE.playerVotes[victim] or 0
 	if(curVotes == 1 or curVotes > 1)then if(player_manager.GetPlayerClass(voter) == "Governor" && voter:GetNWBool("revealed"))then SV_JUDGE.playerVotes[victim] = curVotes - 4 else SV_JUDGE.playerVotes[victim] = curVotes - 1 end end
 	print("UNVOTE THE BIOTCH")
 end
-net.Receive("playerUnvote", function(len,plyr)
+net.Receive("playerUnvote", function(len,pl)
 	print("GOT UNVOTE")
 	local victim = net.ReadString()
-	SV_JUDGE:UnvotePlayer(victim, plyr)
+	SV_JUDGE:UnvotePlayer(victim)
 end)
 
 function SV_JUDGE:Execute()
@@ -264,7 +264,7 @@ function CL_JUDGE:Draw()
 	end
 	-- Instructions --
 		CL_JUDGE:DrawText(ScrW() * .021 + (ScrW() * .15 * .475), ScrW() * .03 + (ScrW() * plyrIndex * .016), Color(255,255,255,255), "Use the arrow keys to change players", "UISmall", TEXT_ALIGN_CENTER) 
-		CL_JUDGE:DrawText(ScrW() * .021 + (ScrW() * .15 * .475), ScrW() * .03 + (ScrW() * plyrIndex * .016) + 30, Color(255,255,255,255), "and the space key to select.", "UISmall", TEXT_ALIGN_CENTER) 
+		CL_JUDGE:DrawText(ScrW() * .021 + (ScrW() * .15 * .475), ScrW() * .03 + (ScrW() * plyrIndex * .016) + 30, Color(255,255,255,255), "and the enter key to select.", "UISmall", TEXT_ALIGN_CENTER) 
 	
 end
 hook.Add("HUDPaint", "DrawJudgementPanels", function()
@@ -273,11 +273,10 @@ end)
 local choiceDelay = 0
 local spamCount = 0
 local curIndex = 1
-local nextMove = 0
 function CL_JUDGE:CheckPress(plyr, key)
 	if(LocalPlayer():Team() == 99 or !timer.Exists("judgementTimer"))then return end
 	CL_JUDGE.highlightedPlayer = CL_JUDGE.currentPlayers[curIndex]
-	if(key == KEY_UP && CurTime() > nextMove)then
+	if(key == KEY_UP)then
 		print(curIndex)
 		if(curIndex == 1)then 
 			curIndex = #CL_JUDGE.currentPlayers 
@@ -285,37 +284,35 @@ function CL_JUDGE:CheckPress(plyr, key)
 			curIndex = curIndex -1
 		end
 		CL_JUDGE.highlightedPlayer = CL_JUDGE.currentPlayers[curIndex]
-		nextMove = CurTime() + .2
-	elseif(key == KEY_DOWN && CurTime() > nextMove)then
+	elseif(key == KEY_DOWN)then
 		if(curIndex == #CL_JUDGE.currentPlayers)then 
 			curIndex = 1 
 		else
 			curIndex = curIndex + 1
 		end
 		CL_JUDGE.highlightedPlayer = CL_JUDGE.currentPlayers[curIndex]
-		nextMove = CurTime() + .2
-	elseif(key == KEY_SPACE)then
+	elseif(key == KEY_ENTER)then
 		if(choiceDelay > os.time())then 
 			spamCount = spamCount + 1
-			if(spamCount > 5)then LocalPlayer():ChatPrint("Stop spamming! We get it! You want "..CL_JUDGE.highlightedPlayer:Nick().." dead. Now, can you be patient and wait a second before voting? Thanks!")end
+			if(spamCount > 3)then LocalPlayer():ChatPrint("Stop spamming! We get it! You want "..CL_JUDGE.highlightedPlayer:Nick().." dead. Now, can you be patient and wait a second before voting? Thanks!")end
 			return 
 		end
 		choiceDelay = os.time() + .25
 		spamCount = 0
 		if(CL_JUDGE.highlightedPlayer == nil) then return end
-
-		if(CL_JUDGE.selectedPlayer != nil)then
-			net.Start("playerUnvote")
-			net.WriteString(CL_JUDGE.selectedPlayer:Nick())
-			net.SendToServer()
-		end
 		net.Start("playerVote")
 			net.WriteString(CL_JUDGE.highlightedPlayer:Nick())
 		net.SendToServer()
-		CL_JUDGE.selectedPlayer = CL_JUDGE.highlightedPlayer
+		if(CL_JUDGE.lastSelectedPlayer != nil)then
+			net.Start("playerUnvote")
+			net.WriteString(CL_JUDGE.lastSelectedPlayer:Nick())
+			net.SendToServer()
+		end
 		
 		LocalPlayer():ChatPrint("You have voted "..CL_JUDGE.highlightedPlayer:Nick().." to be executed!")
 		
+		CL_JUDGE.lastSelectedPlayer = CL_JUDGE.selectedPlayer
+		CL_JUDGE.selectedPlayer = CL_JUDGE.highlightedPlayer
 	end
 end
 hook.Add("PlayerButtonDown", "CheckIfPlayerPressesJudgementMenuKey", function(plyr,key) CL_JUDGE:CheckPress(plyr,key)end)

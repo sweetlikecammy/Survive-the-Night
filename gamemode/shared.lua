@@ -24,10 +24,13 @@ include('cl_winscreen.lua')
 include('cl_factionboard.lua')
 include('cl_fonts.lua')
 include('sv_methods.lua')
+include( "sh_atmos.lua" );
 include("burgerbase/sh_burger_init.lua");
 include("sh_judgement.lua");
 
 AddCSLuaFile("burgerbase/sh_burger_init.lua");
+AddCSLuaFile( "sh_atmos.lua" );
+AddCSLuaFile( "cl_atmos.lua" );
 AddCSLuaFile( "sh_judgement.lua" );
 
 

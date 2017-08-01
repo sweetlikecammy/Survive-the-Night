@@ -22,5 +22,7 @@ if SERVER then
 	
 	resource.AddFile("resource/fonts/dins.ttf")
 	resource.AddFile( "resource/fonts/DIN.ttf" )
+	
+	resource.AddWorkshop( "330382441" )
 
 end

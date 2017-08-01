@@ -216,7 +216,7 @@ CLASS_CONFIG.Classes = {
 		["name"] = "Gangster", -- Clean name for the class, this is the name players will see for the class.
 		["info"] = [[Kill those targeted by your Don!]],
 		["faction"] = CLASS_CONFIG.Factions.TEAM_MOB, -- Faction for this class, more info on factions below
-		["playerAmount"] = 1, -- Decimal place for the amount of faction members to be put in this job (All jobs in same faction should have these equal to 1)
+		["playerAmount"] = .6, -- Decimal place for the amount of faction members to be put in this job (All jobs in same faction should have these equal to 1)
 		["items"]={
 			["melee"] = nil,
 			["ranged"] = "weapon_burger_cs_glock",
@@ -251,6 +251,38 @@ CLASS_CONFIG.Classes = {
 			
 		end
 	},
+	["scout"] = {
+		["name"] = "Scout", -- Clean name for the class, this is the name players will see for the class.
+		["info"] = [[Scan player's quietly to get info on their role!]],
+		["faction"] = CLASS_CONFIG.Factions.TEAM_MOB, -- Faction for this class, more info on factions below
+		["playerAmount"] = .25, -- Decimal place for the amount of faction members to be put in this job (All jobs in same faction should have these equal to 1)
+		["items"]={
+			["melee"] = nil,
+			["ranged"] = nil,
+			["tool"] = "weapon_tool_scanner"
+		},
+		["jobFunc"] = function(victim, killer, weapon)
+			print("Victim: " .. team.GetName(victim:Team()) .. " Killer: " .. team.GetName(killer:Team()))
+			if(victim:Team() == killer:Team())then return 2 end
+			
+		end
+	},
+	["disguiser"] = {
+		["name"] = "Disguiser", -- Clean name for the class, this is the name players will see for the class.
+		["info"] = [[Disguise as other players, changing your name and player model to infiltrate operations!]],
+		["faction"] = CLASS_CONFIG.Factions.TEAM_MOB, -- Faction for this class, more info on factions below
+		["playerAmount"] = .15, -- Decimal place for the amount of faction members to be put in this job (All jobs in same faction should have these equal to 1)
+		["items"]={
+			["melee"] = nil,
+			["ranged"] = nil,
+			["tool"] = nil
+		},
+		["jobFunc"] = function(victim, killer, weapon)
+			print("Victim: " .. team.GetName(victim:Team()) .. " Killer: " .. team.GetName(killer:Team()))
+			if(victim:Team() == killer:Team())then return 2 end
+			
+		end
+	}
 }
 
 CLASS_CONFIG.groups = { -- Create groups for larger  grouping of classes to use, for example: All mob jobs and psycho jobs are criminals but not in same faction

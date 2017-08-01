@@ -4,6 +4,7 @@
 SVR = {}
 
 SVR.friendlyKillers = {}
+SVR.playersRevealed = {}  -- List of those who have revealed their job
 SVR.nightPlayersDead = {}  -- List of those who have revealed their job
 
 SVR.callingCards = {}  -- List of Calling Cards psycho groups can place on their victims
@@ -158,7 +159,6 @@ function SVR:RespawnPlayers(plyr)
 				randSpawnPos = Vector(randSpawnPos.x, randSpawnPos.y, randSpawnPos.z)
 				v:SetPos(randSpawnPos)
 				GAMEMODE:SetPlayerSpeed(v, 250, 400)
-				v:SetJumpPower(200)
 				SVR:StartWeapons(v)
 			end
 		end
@@ -168,7 +168,6 @@ function SVR:RespawnPlayers(plyr)
 		randSpawnPos = Vector(randSpawnPos.x, randSpawnPos.y, randSpawnPos.z)
 		plyr:SetPos(randSpawnPos)
 		GAMEMODE:SetPlayerSpeed(plyr, 250, 400)
-		plyr:SetJumpPower(200)
 		SVR:StartWeapons(plyr)
 	end
 end
@@ -214,7 +213,6 @@ function SVR:JudgementTime()
 		if(not v:IsSuperAdmin()) then GAMEMODE:SetPlayerSpeed(v, 0, 0) end
 		v:SetPos(Vector(judgementStandPos.x+teleBuffer-startLineBuffer, judgementStandPos.y, judgementStandPos.z))
 		teleBuffer = teleBuffer + 20
-		v:SetJumpPower(0)
 	end 
 end
 
@@ -232,7 +230,6 @@ function EntsShouldCollide( a, b )
 	
 	if a:IsValid() and a:IsPlayer() and b:IsValid() and b:IsPlayer() then
 		if a:GetPhysicsObject():IsPenetrating() != false or b:GetPhysicsObject():IsPenetrating() != false then
-			print("Player is Penetrating!")
 			return false
 		end
 	end
@@ -350,7 +347,7 @@ function SVR:Gameover(winTeam, didWin)
 			SVR.deathlessNights = 0
 			SVR.flag_hasPlayerDied = true
 			SVR.gameOver = false
-			StartGameChecker()
+			SVR:StartGame()
 		end)
 	else
 		SVR.deathlessNights = 0
@@ -364,7 +361,7 @@ function SVR:Gameover(winTeam, didWin)
 				SVR.deathlessNights = 0
 				SVR.flag_hasPlayerDied = true
 				SVR.gameOver = false
-				StartGameChecker()
+				SVR:StartGame()
 			else
 				for k,v in pairs(player.GetAll())do
 					v:ChatPrint(timer.RepsLeft("GameOverTimer"))
@@ -392,6 +389,7 @@ function SVR:StartGame()
 	if(timer.Exists("ExecutePlayer") == true)then timer.Remove("ExecutePlayer")end
 	
 	SVR.time = 0
+	SVR.playersRevealed = {}
 	SVR:SetFactions()
 	SVR:ChangeTime()
 end
@@ -630,7 +628,7 @@ hook.Add("PlayerSay", "CheckForGamemodeChatTagss!s", function(plyr, text, team)
 				v:ChatPrint(plyr:Nick().." has revealed his identity as the "..player_manager.GetPlayerClass(plyr).."!")
 			end
 		end
-		return ""
+		return " "
 	elseif(string.sub(text, 1, 8) == "!execute" && player_manager.GetPlayerClass(plyr) == "Sheriff") then
 		for k,v in pairs(ents.GetAll())do
 			if(v:GetClass() == "entity_jail")then
@@ -649,7 +647,6 @@ hook.Add("PlayerSay", "CheckForGamemodeChatTagss!s", function(plyr, text, team)
 				end
 			end
 		end
-	return ""
 	elseif(string.sub(text, 1, 8) == "!release" && player_manager.GetPlayerClass(plyr) == "Sheriff") then
 		for k,v in pairs(ents.GetAll())do
 			if(v:GetClass() == "entity_jail")then
@@ -668,9 +665,7 @@ hook.Add("PlayerSay", "CheckForGamemodeChatTagss!s", function(plyr, text, team)
 				end
 			end
 		end
-	return ""
 	end
-	
 end)
 
 function SVR:ScrambleText(msg)

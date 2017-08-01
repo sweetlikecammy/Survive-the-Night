@@ -9,6 +9,7 @@ include( "cl_hudpickup.lua" )
 include( "cl_spawnmenu.lua" )
 include( "cl_deathnotice.lua" )
 include( "cl_pickteam.lua" )
+include( "cl_voice.lua" )
 include( "cl_weaponchange.lua" )
 include( "cl_factionboard.lua" )
 include( "cl_spawnscreen.lua" )
@@ -77,9 +78,7 @@ function GM:HUDShouldDraw( name )
 		CHudWeapon = false,				
 		CHudHintDisplay = false,			
 		CHudCrosshair = true,				
-		CHudDamageIndicator = false,
-		CHudVoiceSelfStatus	= false,
-		CHudVoiceStatus = false		
+		CHudDamageIndicator = false,	
 	}
 	
 	for k,v in pairs(hideHUD)do
