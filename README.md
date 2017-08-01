@@ -24,12 +24,12 @@ Death Notes / Calling Cards - All players can write a death note or calling card
 session after their death. Death cards are made to allow players to log progress on figuring out who is what class!
 Calling cards are read when the victim of the killer is revealed at judgement.
 
->Current Factions:
+Current Factions:
 > 1. Government
 > 2. Mob
 > 3. Murderer
 
->Current Classes:
+Current Classes:
 
 >Government
 > 1. Police Officer
