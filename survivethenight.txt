@@ -1,0 +1,20 @@
+"survivethenight"
+{
+	"base"		"base"
+	"title"		"Survive the Night"
+	"maps"		"^gm_|^gmod_|^phys_|^ttt_"
+	"menusystem"	"1"
+	//"workshopid"    ""
+
+	"settings"
+	{
+		1
+		{
+			"name"		"fm_min_players"
+			"text"		"Minimum amount of players for the game to start (Recommended nothing less than 5)"
+			"type"		"Numeric"
+			"default"	"5"
+		}
+		
+	}
+}
