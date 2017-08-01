@@ -61,7 +61,7 @@ CLASS_CONFIG.Factions = {
 		end
 	},
 	TEAM_MURDERER = {
-		["name"] = "MURDERS", 
+		["name"] = "MURDERERS", 
 		["mission"] = [[As part of the Murderers, your job is it to kill EVERYONE!]], 
 		["color"] = Color(255,100,50,255), 
 		["playerAmount"] = .05, -- Decimal place for the amount of total players to be assigned to this Faction 
