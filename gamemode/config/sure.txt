@@ -1,0 +1,50 @@
+CLASS_CONFIG = {}  -- Don't touch this, its mine
+Factions = CLASS_CONFIG.Factions -- Don't touch this, its mine
+
+--[[Factions! Factions are a crucial part of this gamemode, each class in on a faction 
+and the only way a player can win is if their faction wins!]]
+CLASS_CONFIG.Factions = {
+	["government"] = {
+		["name"] = "GOVERNMENT",  -- Clean name for the faction, this is the name players will see for the faction.
+		
+		--[[Mission for the faction, this is the mission that all memebers 
+		of the faction will see as the way they can win!]] 
+		["mission"] = [[As part of the Police, your job is to find all criminals and bring them justice! (AKA Death)]], 
+		
+		["color"] = Color(0,0,150,255), 
+		
+		--[[This is the function that gives the faction the actual mission they have to do.
+		I am going to attempt to simplify the code enough to give you a basic understanding.
+		I do encourage all to atempt to read the code and modify it, but make sure 
+		to duplicate this file incase things to sour!]] 
+		["missionFunc"] = function()
+		
+		end
+		
+	},
+	
+	["mob"] = {
+		["name"] = "MOB", 
+		["mission"] = [[As part of the Criminals, your job is to find all criminals and bring them justice! (AKA Death)]], 
+		["color"] = Color(150,0,0,255), 
+		["missionFunc"] = function()
+			
+		end
+	}
+}
+
+--[[Classes! Classes are what make this gamemode SO MUCH FUN! 
+Each class has different weapons, traits, skills, and missions to complete for their faction!]]
+CLASS_CONFIG.Classes = {
+	["policeOfficer"] = {
+		["name"] = "Police Officer", -- Clean name for the class, this is the name players will see for the class.
+		["info"] = [[You are a Police Officer. Your job is to arrest the criminals you find for the sheriff to choose whether they will live or die!]],
+		["faction"] = CLASS_CONFIG.Factions["police"] -- Faction for this class, more info on factions below
+	}
+}
+
+function Test()
+		
+		end
+
+

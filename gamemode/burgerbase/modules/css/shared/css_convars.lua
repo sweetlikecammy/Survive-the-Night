@@ -1,0 +1,1 @@
+BURGERBASE:INIT_MassInclude("convars/","shared",false,5)
